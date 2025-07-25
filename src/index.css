@@ -1,0 +1,204 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Fitness App Design System - Modern Glassmorphism with Cool Tones */
+
+@layer base {
+  :root {
+    /* Background & Surface Colors */
+    --background: 220 25% 97%;
+    --foreground: 220 15% 15%;
+    --surface: 220 20% 95%;
+    --surface-secondary: 220 15% 92%;
+
+    /* Glass Effects */
+    --glass: 220 30% 98%;
+    --glass-border: 220 20% 85%;
+    --glass-shadow: 220 15% 25%;
+
+    /* Primary Brand Colors - Cool Blue Gradient */
+    --primary: 205 85% 45%;
+    --primary-foreground: 220 25% 97%;
+    --primary-light: 205 75% 55%;
+    --primary-dark: 205 95% 35%;
+
+    /* Secondary - Teal */
+    --secondary: 180 60% 50%;
+    --secondary-foreground: 220 25% 97%;
+    --secondary-light: 180 50% 60%;
+    --secondary-dark: 180 70% 40%;
+
+    /* Accent - Neon Green for Energy */
+    --accent: 150 85% 55%;
+    --accent-foreground: 220 15% 15%;
+    --accent-glow: 150 85% 65%;
+
+    /* Neutral Grays */
+    --muted: 220 10% 88%;
+    --muted-foreground: 220 15% 45%;
+    --muted-dark: 220 15% 75%;
+
+    /* Status Colors */
+    --success: 145 70% 50%;
+    --success-foreground: 220 25% 97%;
+    --warning: 45 85% 55%;
+    --warning-foreground: 220 15% 15%;
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 220 25% 97%;
+
+    /* Interactive Elements */
+    --border: 220 15% 85%;
+    --input: 220 20% 92%;
+    --ring: 205 85% 45%;
+
+    /* Card & Component Styling */
+    --card: 220 30% 98%;
+    --card-foreground: 220 15% 15%;
+    --popover: 220 30% 98%;
+    --popover-foreground: 220 15% 15%;
+
+    /* Design System Variables */
+    --radius: 1rem;
+    --glass-blur: blur(12px);
+    --shadow-glow: 0 8px 32px hsla(var(--primary), 0.15);
+    --shadow-elevated: 0 20px 40px hsla(var(--glass-shadow), 0.1);
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-light)));
+    --gradient-secondary: linear-gradient(135deg, hsl(var(--secondary)), hsl(var(--secondary-light)));
+    --gradient-accent: linear-gradient(135deg, hsl(var(--accent)), hsl(var(--accent-glow)));
+    --gradient-glass: linear-gradient(135deg, hsla(var(--glass), 0.3), hsla(var(--glass), 0.1));
+
+    /* Typography */
+    --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    /* Dark Mode - Deep Blues with Bright Accents */
+    --background: 220 25% 8%;
+    --foreground: 220 15% 90%;
+    --surface: 220 20% 12%;
+    --surface-secondary: 220 15% 15%;
+
+    /* Glass Effects - Dark */
+    --glass: 220 30% 15%;
+    --glass-border: 220 20% 25%;
+    --glass-shadow: 220 15% 5%;
+
+    /* Primary - Brighter in Dark */
+    --primary: 205 85% 55%;
+    --primary-foreground: 220 25% 8%;
+    --primary-light: 205 75% 65%;
+    --primary-dark: 205 95% 45%;
+
+    /* Secondary - Bright Teal */
+    --secondary: 180 60% 60%;
+    --secondary-foreground: 220 25% 8%;
+    --secondary-light: 180 50% 70%;
+    --secondary-dark: 180 70% 50%;
+
+    /* Accent - Bright Neon Green */
+    --accent: 150 85% 65%;
+    --accent-foreground: 220 15% 8%;
+    --accent-glow: 150 85% 75%;
+
+    /* Neutral Grays - Dark */
+    --muted: 220 10% 20%;
+    --muted-foreground: 220 15% 65%;
+    --muted-dark: 220 15% 25%;
+
+    /* Status Colors - Dark Mode */
+    --success: 145 70% 60%;
+    --success-foreground: 220 25% 8%;
+    --warning: 45 85% 65%;
+    --warning-foreground: 220 15% 8%;
+    --destructive: 0 75% 65%;
+    --destructive-foreground: 220 25% 8%;
+
+    /* Interactive Elements - Dark */
+    --border: 220 15% 25%;
+    --input: 220 20% 15%;
+    --ring: 205 85% 55%;
+
+    /* Card & Component Styling - Dark */
+    --card: 220 30% 15%;
+    --card-foreground: 220 15% 90%;
+    --popover: 220 30% 15%;
+    --popover-foreground: 220 15% 90%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    /* Mobile-first responsive typography */
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  @media (min-width: 640px) {
+    body {
+      font-size: 16px;
+    }
+  }
+}
+
+/* Quote ticker animation */
+@keyframes scroll-left {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
+.animate-scroll-left {
+  animation: scroll-left 15s linear infinite;
+}
+
+/* Floating animation for stats cards */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Glow pulse animation */
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 20px hsl(var(--accent) / 0.3); }
+  50% { box-shadow: 0 0 30px hsl(var(--accent) / 0.6), 0 0 40px hsl(var(--accent) / 0.4); }
+}
+
+/* Animation utility classes */
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 2s ease-in-out infinite;
+}

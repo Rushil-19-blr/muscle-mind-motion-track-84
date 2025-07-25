@@ -33,6 +33,20 @@
     --accent: 150 85% 55%;
     --accent-foreground: 220 15% 15%;
     --accent-glow: 150 85% 65%;
+    
+    /* Futuristic Neon Colors */
+    --neon-blue: 210 100% 56%;
+    --neon-purple: 270 100% 70%;
+    --neon-teal: 180 100% 50%;
+    --neon-green: 120 100% 50%;
+    --neon-pink: 320 100% 70%;
+    --neon-yellow: 60 100% 60%;
+    --neon-orange: 30 100% 60%;
+    
+    /* XP & Gamification Colors */
+    --xp-gold: 45 100% 60%;
+    --streak-fire: 15 100% 55%;
+    --achievement-purple: 280 100% 65%;
 
     /* Neutral Grays */
     --muted: 220 10% 88%;
@@ -194,6 +208,51 @@
   50% { box-shadow: 0 0 30px hsl(var(--accent) / 0.6), 0 0 40px hsl(var(--accent) / 0.4); }
 }
 
+/* Futuristic Progress Animations */
+@keyframes neon-pulse {
+  0%, 100% { 
+    box-shadow: 0 0 10px hsl(var(--neon-blue) / 0.5);
+    border-color: hsl(var(--neon-blue) / 0.5);
+  }
+  50% { 
+    box-shadow: 0 0 25px hsl(var(--neon-blue) / 0.8), 0 0 35px hsl(var(--neon-blue) / 0.6);
+    border-color: hsl(var(--neon-blue) / 0.8);
+  }
+}
+
+@keyframes streak-fire {
+  0%, 100% { 
+    filter: hue-rotate(0deg) brightness(1);
+    transform: scale(1);
+  }
+  50% { 
+    filter: hue-rotate(15deg) brightness(1.2);
+    transform: scale(1.05);
+  }
+}
+
+@keyframes xp-sparkle {
+  0% { transform: rotate(0deg) scale(1); opacity: 0; }
+  50% { transform: rotate(180deg) scale(1.2); opacity: 1; }
+  100% { transform: rotate(360deg) scale(1); opacity: 0; }
+}
+
+@keyframes chart-grow {
+  0% { transform: scaleY(0); opacity: 0; }
+  100% { transform: scaleY(1); opacity: 1; }
+}
+
+@keyframes bounce-in {
+  0% { transform: scale(0); opacity: 0; }
+  60% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes progress-fill {
+  0% { width: 0%; }
+  100% { width: var(--progress-width, 0%); }
+}
+
 /* Animation utility classes */
 .animate-float {
   animation: float 3s ease-in-out infinite;
@@ -201,4 +260,64 @@
 
 .animate-glow-pulse {
   animation: glow-pulse 2s ease-in-out infinite;
+}
+
+.animate-neon-pulse {
+  animation: neon-pulse 2s ease-in-out infinite;
+}
+
+.animate-streak-fire {
+  animation: streak-fire 1.5s ease-in-out infinite;
+}
+
+.animate-xp-sparkle {
+  animation: xp-sparkle 2s ease-in-out infinite;
+}
+
+.animate-chart-grow {
+  animation: chart-grow 0.8s ease-out forwards;
+  transform-origin: bottom;
+}
+
+.animate-bounce-in {
+  animation: bounce-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+
+.animate-progress-fill {
+  animation: progress-fill 1.5s ease-out forwards;
+}
+
+/* Hover Effects for Interactive Elements */
+.hover-neon-glow:hover {
+  box-shadow: 0 0 20px hsl(var(--neon-blue) / 0.6), 0 0 30px hsl(var(--neon-blue) / 0.4);
+  border-color: hsl(var(--neon-blue) / 0.8);
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+.hover-scale:hover {
+  transform: scale(1.05);
+  transition: transform 0.2s ease;
+}
+
+/* Gradient text effects */
+.text-neon-gradient {
+  background: linear-gradient(135deg, hsl(var(--neon-blue)), hsl(var(--neon-purple)));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-fire-gradient {
+  background: linear-gradient(135deg, hsl(var(--neon-yellow)), hsl(var(--neon-orange)), hsl(var(--streak-fire)));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-xp-gradient {
+  background: linear-gradient(135deg, hsl(var(--xp-gold)), hsl(var(--neon-yellow)));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }

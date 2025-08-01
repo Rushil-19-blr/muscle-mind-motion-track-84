@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Mic, VolumeX, Volume2, Bot, User } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Mic, VolumeX, Volume2, Bot, User, Send, X } from 'lucide-react';
 import { googleAIService, WorkoutPlan } from '@/services/GoogleAIService';
 import { useToast } from '@/hooks/use-toast';
 
@@ -19,6 +20,7 @@ interface TalkWithRexProps {
   isWorkoutMode?: boolean;
   currentExercise?: string;
   onPlanModified?: (plan: WorkoutPlan) => void;
+  elevenLabsApiKey?: string;
 }
 
 export const TalkWithRex: React.FC<TalkWithRexProps> = ({ 
@@ -26,13 +28,15 @@ export const TalkWithRex: React.FC<TalkWithRexProps> = ({
   workoutPlan,
   isWorkoutMode = false,
   currentExercise,
-  onPlanModified
+  onPlanModified,
+  elevenLabsApiKey
 }) => {
   const [isListening, setIsListening] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [userTranscript, setUserTranscript] = useState('');
+  const [textInput, setTextInput] = useState('');
   const [rexResponse, setRexResponse] = useState('');
   const [showPanel, setShowPanel] = useState(false);
   const [animationPhase, setAnimationPhase] = useState<'listening' | 'morphing' | 'responding' | 'idle'>('idle');
@@ -144,6 +148,17 @@ export const TalkWithRex: React.FC<TalkWithRexProps> = ({
     }
   };
 
+  const handleSendText = async () => {
+    if (!textInput.trim()) return;
+    
+    setUserTranscript(textInput.trim());
+    setTextInput('');
+    setShowPanel(true);
+    setAnimationPhase('morphing');
+    
+    await handleProcessMessage(textInput.trim());
+  };
+
   const getRexResponse = async (userInput: string): Promise<string> => {
     const contextInfo = {
       userData: userData || {},
@@ -192,38 +207,94 @@ export const TalkWithRex: React.FC<TalkWithRexProps> = ({
         window.speechSynthesis.cancel();
         setIsSpeaking(true);
         
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.rate = 1.0;
-        utterance.pitch = 1.0;
-        utterance.volume = 1.0;
-        
-        // Try to use a better voice if available
-        const voices = window.speechSynthesis.getVoices();
-        const preferredVoice = voices.find(voice => 
-          voice.name.includes('Google') || 
-          voice.name.includes('Microsoft') ||
-          voice.name.includes('Alex')
-        );
-        
-        if (preferredVoice) {
-          utterance.voice = preferredVoice;
+        if (elevenLabsApiKey) {
+          // Use ElevenLabs for better voice quality
+          speakWithElevenLabs(text).then(() => {
+            setIsSpeaking(false);
+            resolve();
+          }).catch(() => {
+            // Fallback to browser TTS
+            speakWithBrowserTTS(text, resolve);
+          });
+        } else {
+          // Use browser TTS
+          speakWithBrowserTTS(text, resolve);
         }
-        
-        utterance.onend = () => {
-          setIsSpeaking(false);
-          resolve();
-        };
-        
-        utterance.onerror = () => {
-          setIsSpeaking(false);
-          resolve();
-        };
-        
-        window.speechSynthesis.speak(utterance);
       } else {
         resolve();
       }
     });
+  };
+
+  const speakWithElevenLabs = async (text: string): Promise<void> => {
+    if (!elevenLabsApiKey) throw new Error('No API key');
+    
+    try {
+      const response = await fetch('https://api.elevenlabs.io/v1/text-to-speech/9BWtsMINqrJLrRacOk9x', {
+        method: 'POST',
+        headers: {
+          'Accept': 'audio/mpeg',
+          'Content-Type': 'application/json',
+          'xi-api-key': elevenLabsApiKey
+        },
+        body: JSON.stringify({
+          text: text,
+          model_id: 'eleven_multilingual_v2',
+          voice_settings: {
+            stability: 0.5,
+            similarity_boost: 0.5
+          }
+        })
+      });
+
+      if (response.ok) {
+        const audioBuffer = await response.arrayBuffer();
+        const audioBlob = new Blob([audioBuffer], { type: 'audio/mpeg' });
+        const audioUrl = URL.createObjectURL(audioBlob);
+        const audio = new Audio(audioUrl);
+        
+        audio.onended = () => {
+          URL.revokeObjectURL(audioUrl);
+        };
+        
+        await audio.play();
+      } else {
+        throw new Error('ElevenLabs API failed');
+      }
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const speakWithBrowserTTS = (text: string, callback: () => void) => {
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 1.0;
+    utterance.pitch = 1.0;
+    utterance.volume = 1.0;
+    
+    // Try to use a better voice if available
+    const voices = window.speechSynthesis.getVoices();
+    const preferredVoice = voices.find(voice => 
+      voice.name.includes('Google') || 
+      voice.name.includes('Microsoft') ||
+      voice.name.includes('Alex')
+    );
+    
+    if (preferredVoice) {
+      utterance.voice = preferredVoice;
+    }
+    
+    utterance.onend = () => {
+      setIsSpeaking(false);
+      callback();
+    };
+    
+    utterance.onerror = () => {
+      setIsSpeaking(false);
+      callback();
+    };
+    
+    window.speechSynthesis.speak(utterance);
   };
 
   const stopSpeaking = () => {
@@ -237,12 +308,40 @@ export const TalkWithRex: React.FC<TalkWithRexProps> = ({
     setShowPanel(false);
     setAnimationPhase('idle');
     setUserTranscript('');
+    setTextInput('');
     setRexResponse('');
     stopSpeaking();
   };
 
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendText();
+    }
+  };
+
   return (
     <>
+      {/* Floating Text Input */}
+      <div className="fixed bottom-20 right-6 z-40 flex gap-2">
+        <Input
+          value={textInput}
+          onChange={(e) => setTextInput(e.target.value)}
+          onKeyPress={handleKeyPress}
+          placeholder="Type to Rex..."
+          className="w-48 bg-background/90 backdrop-blur-sm"
+          disabled={isProcessing}
+        />
+        <Button
+          onClick={handleSendText}
+          disabled={!textInput.trim() || isProcessing}
+          size="icon"
+          className="bg-blue-500 hover:bg-blue-600"
+        >
+          <Send className="w-4 h-4" />
+        </Button>
+      </div>
+
       {/* Talk with Rex Button */}
       <Button
         onMouseDown={startListening}

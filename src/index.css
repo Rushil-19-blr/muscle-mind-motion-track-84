@@ -74,10 +74,15 @@
 
     /* Design System Variables */
     --radius: 1rem;
-    --glass-blur: blur(12px);
+    --glass-blur: blur(16px);
     --shadow-glow: 0 8px 32px hsla(var(--primary), 0.15);
     --shadow-elevated: 0 20px 40px hsla(var(--glass-shadow), 0.1);
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* Voice UI specific - enhanced visibility */
+    --voice-panel-bg: hsla(var(--card), 0.95);
+    --voice-panel-border: hsla(var(--border), 0.8);
+    --backdrop-blur-voice: blur(20px);
     --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-light)));
     --gradient-secondary: linear-gradient(135deg, hsl(var(--secondary)), hsl(var(--secondary-light)));
     --gradient-accent: linear-gradient(135deg, hsl(var(--accent)), hsl(var(--accent-glow)));

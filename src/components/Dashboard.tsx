@@ -23,6 +23,7 @@ import { DailyChallengeWidget } from '@/components/DailyChallengeWidget';
 import { MoodBoosterWidget } from '@/components/MoodBoosterWidget';
 import { QuickThemeToggle } from '@/components/QuickThemeToggle';
 import { calorieEstimationService } from '@/services/CalorieEstimationService';
+import { VoiceRexChatbot } from '@/components/VoiceRexChatbot';
 
 interface DashboardProps {
   onStartWorkout?: () => void;
@@ -293,6 +294,20 @@ const Dashboard: React.FC<DashboardProps> = ({
             })) : []} 
           />
         </div>
+
+        {/* Voice Rex Chatbot */}
+        <VoiceRexChatbot 
+          userData={userData}
+          workoutPlan={workoutPlan}
+          isWorkoutMode={false}
+          onPlanModified={(modifiedPlan) => {
+            setWorkoutPlan(modifiedPlan);
+            // Save to Firestore
+            if (user) {
+              firestoreService.updateWorkoutPlan(user.uid, modifiedPlan);
+            }
+          }}
+        />
 
       </div>
     </div>
